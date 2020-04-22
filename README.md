@@ -1,4 +1,4 @@
-# arx
+# enx
 It is like dotenv and dot-env, but with the best of both and more features.
 
 > 🆘 **Help** this project by conttributing to its documentation or developing its roadmap.
@@ -20,7 +20,7 @@ It is like dotenv and dot-env, but with the best of both and more features.
 ### 1. Install it via package manager
 
 ```
-$ npm i --S @arx/env
+$ npm i --S @enx/env
 ```
 
 ### 2. Define your variables file
@@ -33,46 +33,46 @@ $ npm i --S @arx/env
 }
 ```
 
-### 3. Call arx in your app entry file
+### 3. Call enx in your app entry file
 ```javascript
-const arx = require('@arx/env')();
+const enx = require('@enx/env')();
 ```
 
-### 4. Fetch variables from arx itself or `global` variable
+### 4. Fetch variables from enx itself or `global` variable
 ```javascript
-const arx = require('@arx/env')();
+const enx = require('@enx/env')();
 
-const value = arx.myconfig;
+const value = enx.myconfig;
 ```
 
 or
 ```javascript
-const value = global.arx.myconfig;
+const value = global.enx.myconfig;
 ```
 
 ## Advanced usage
 
 ### ⭐ Multiple environments
 
-By default, arx will look for a `.env.json` file if the [environment name variable](#env-string) does not exist.
+By default, enx will look for a `.env.json` file if the [environment name variable](#env-string) does not exist.
 
 If it exists, it will be appended to `.env.json` file name.
 
-For example, arx will look for a file named `.env.production` for an environment named "production".
+For example, enx will look for a file named `.env.production` for an environment named "production".
 
 #### Merging files
 
-If there is both a `.env.json` file and a `.env.ENVIRONMENT.json` file, arx will merge both, but always with environment-scoped variables overriding the generic file.
+If there is both a `.env.json` file and a `.env.ENVIRONMENT.json` file, enx will merge both, but always with environment-scoped variables overriding the generic file.
 
 ## Overriding load options
 
-You can override arx default options passing an object with the options you want to customize:
+You can override enx default options passing an object with the options you want to customize:
 
 ```javascript
-const arx = require('@arx/env')({ options });
+const enx = require('@enx/env')({ options });
 ```
 
-These are the default arx options:
+These are the default enx options:
 
 ```javascript
 {
@@ -99,7 +99,7 @@ Name of the environment variable that holds the environment name. Defaults to `N
 
 Folder containing the variables file. Defaults to `process.cwd()` (project root).
 
-Example for a relative './config' folder: `arx({ cwd: './config' })`.
+Example for a relative './config' folder: `enx({ cwd: './config' })`.
 
 #### `debug` _boolean_
 

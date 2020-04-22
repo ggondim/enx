@@ -10,13 +10,13 @@ function log(debug, message, { prefix } = {}) {
   }
 }
 
-function parseArxFile(filePath, { debug }) {
+function parseenxFile(filePath, { debug }) {
   let parsed = {};
   try {
     const file = fs.readFileSync(filePath);
     parsed = JSON.parse(file);
   } catch (e) {
-    log(debug, e, { prefix: `error in parseArxFile(${filePath})` });
+    log(debug, e, { prefix: `error in parseenxFile(${filePath})` });
   }
   return parsed;
 }
@@ -37,19 +37,19 @@ function load({
   cwd = process.cwd(),
   debug = false
 } = {}) {
-  if (globalVar && globalVar.arx) {
-    log(debug, 'arx alread loaded');
+  if (globalVar && globalVar.enx) {
+    log(debug, 'enx alread loaded');
     return globalVar.asx;
   }
 
-  let vars = parseArxFile(path.resolve(cwd, fileName.replace('.${env}', '')), { debug });
+  let vars = parseenxFile(path.resolve(cwd, fileName.replace('.${env}', '')), { debug });
   log(debug, vars, { prefix: 'vars' });
 
-  const envVars = parseArxFile(path.resolve(cwd, fileName.replace('${env}', env)), { debug });
+  const envVars = parseenxFile(path.resolve(cwd, fileName.replace('${env}', env)), { debug });
   log(debug, envVars, { prefix: 'envVars' });
   
   log(debug, vars, { prefix: 'vars' });
-  globalVar.arx = override(vars, envVars);
+  globalVar.enx = override(vars, envVars);
 
-  return globalVar.arx;
+  return globalVar.enx;
 }

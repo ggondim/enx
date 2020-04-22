@@ -1,3 +1,3 @@
-const arx = require('../index')();
+const enx = require('../index')();
 
-console.log(arx)
+console.log(enx)

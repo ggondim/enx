@@ -8,13 +8,13 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/NOALVO/arx.git"
+    "url": "git+https://github.com/NOALVO/enx.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/NOALVO/arx/issues"
+    "url": "https://github.com/NOALVO/enx/issues"
   },
-  "homepage": "https://github.com/NOALVO/arx#readme"
+  "homepage": "https://github.com/NOALVO/enx#readme"
 }
