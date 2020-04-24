@@ -39,7 +39,7 @@ function load({
 } = {}) {
   if (globalVar && globalVar.enx) {
     log(debug, 'enx alread loaded');
-    return globalVar.asx;
+    return globalVar.global;
   }
 
   let vars = parseenxFile(path.resolve(cwd, fileName.replace('.${env}', '')), { debug });
