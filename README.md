@@ -5,13 +5,13 @@ It is like dotenv and dot-env, but with the best of both and more features.
 
 ## Features
 
-- [x] Config file is a JSON
 - [x] Multi-environment merging (`NODE_ENV` support)
 - [x] Custom file path
 - [x] Object-oriented variables instead just strings
 - [ ] Front-end support with webpack
-- [ ] `.env` portability
-- [ ] Execution of JS files
+- [X] `.env` portability
+- [X] Execution of JS modules
+- [ ]`process.env` variable injection
 
 *Not checked features are in roadmap.
 
@@ -50,6 +50,16 @@ or
 const value = global.enx.myconfig;
 ```
 
+## Enx file types precedence
+
+1. `.env` files
+2. CommonJS modules exported in `.js` files
+3. `.json` files
+
+Prefer always to use `.env.json` files.
+
+If you want to change the filename pattern, refer to `fileName` option in [Overriding load options](#Overriding-load-options).
+
 ## Advanced usage
 
 ### ⭐ Multiple environments
@@ -63,6 +73,29 @@ For example, enx will look for a file named `.env.production` for an environment
 #### Merging files
 
 If there is both a `.env.json` file and a `.env.ENVIRONMENT.json` file, enx will merge both, but always with environment-scoped variables overriding the generic file.
+
+### ⭐ `.env` portability
+
+You can use your existent `.env` files with enx.
+
+You just need them in your package folder, because that file type [takes precedence](#Enx-file-types-precedence) over `.env.json` files.
+
+### ⭐ Execution of JS modules
+
+In a scenario you need computed config values, you can use a CommonJS module as your enx file, exporting the module as your config object.
+
+Example:
+
+`.env.js`
+```javascript
+module.exports = {
+  value: computeValue()
+};
+```
+
+Make sure you don't have any `.env` files alongside `.env.js` files, because `.env` files [takes precedence](#Enx-file-types-precedence) over JS files.
+
+JS files also will override `.env.json` files because they [take precedence](#Enx-file-types-precedence).
 
 ## Overriding load options
 
