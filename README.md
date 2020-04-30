@@ -11,7 +11,7 @@ It is like dotenv and dot-env, but with the best of both and more features.
 - [ ] Front-end support with webpack
 - [X] `.env` portability
 - [X] Execution of JS modules
-- [ ]`process.env` variable injection
+- [ ] `process.env` variable injection
 
 *Not checked features are in roadmap.
 
