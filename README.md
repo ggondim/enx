@@ -8,14 +8,25 @@ It is like dotenv and dot-env, but with the best of both and more features.
 - [x] Multi-environment merging (`NODE_ENV` support)
 - [x] Custom file path
 - [x] Object-oriented variables instead just strings
-- [ ] Front-end support with webpack
 - [X] `.env` portability
 - [X] Execution of JS modules
 - [X] `process.env` variable injection
+- [X] Vue.js support with [enx-vue-cli-plugin](https://github.com/NOALVO/enx-vue-cli-plugin)
+- [ ] Webpack plugin
 
 *Not checked features are in roadmap.
 
 ## Basic Usage
+
+First of all, define your variables file in `.env.json` or any [supported file type](#enx-file-types-precedence):
+
+```json
+{
+  "myconfig": "value"
+}
+```
+
+### 🖼️ Front-end
 
 ### 1. Install it via package manager
 
@@ -26,12 +37,6 @@ $ npm i --S @enx/env
 ### 2. Define your variables file
 
 `.env.json` 
-
-```json
-{
-  "myconfig": "value"
-}
-```
 
 ### 3. Call enx in your app entry file
 ```javascript
@@ -52,8 +57,8 @@ const value = global.enx.myconfig;
 
 ## Enx file types precedence
 
-1. `.env` files
-2. CommonJS modules exported in `.js` files
+1. `.env` files (see [`.env` portability](#-env-portability))
+2. CommonJS modules exported in `.js` files (see [Execution of JS modules](#-execution-of-js-modules))
 3. `.json` files
 
 Prefer always to use `.env.json` files.
