@@ -32,31 +32,45 @@ First of all, define your variables file in `.env.json` or any [supported file t
 }
 ```
 
-### 🖼️ Front-end
+Then, follow the steps below for using it in front-end or in back-end.
 
-### 1. Install it via package manager
+> i We added front-end support just for Vue.js for now. If you use another framework, just require enx at your webpack configuration file and export it as a global variable using DefinePlugin. If you think this is too hard, help us developing an Webpack Plugin!
+
+### In front-end 🖼️
+
+Install it as a devDependency via package manager
 
 ```
-$ npm i --S @enx/env
+$ npm i -D @enx/vue-cli-plugin-enx
 ```
 
-### 2. Define your variables file
+Then fetch variables from enx inside any Vue or JS file as a global variable:
 
-`.env.json` 
+```javascript
+const myvalue = enx.value;
+```
 
-### 3. Call enx in your app entry file
+### In back-end ⚙
+
+Install it via package manager
+
+```
+$ npm i -S @enx/env
+```
+
+Then, call enx in your app entry file
 ```javascript
 const enx = require('@enx/env')();
 ```
 
-### 4. Fetch variables from enx itself or `global` variable
+Now you can fetch variables from enx itself or `global` variable
 ```javascript
 const enx = require('@enx/env')();
 
 const value = enx.myconfig;
 ```
 
-or
+or without requiring enx:
 ```javascript
 const value = global.enx.myconfig;
 ```
