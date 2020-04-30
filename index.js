@@ -90,14 +90,18 @@ function parseDotEnvFile(filePath, { debug }) {
 }
 
 function getConfigFile(filePath, {debug}) {
+  const slash = filePath.indexOf('/') !== -1 ? '/' : '\\';
+  const slashSplit = filePath.split(slash);
+  const fileName = slashSplit[slashSplit.length - 1];
+
   if (filePath.endsWith('.json')) {
     return parseJsonFile(filePath, { debug });
   } else if (filePath.endsWith('.js')) {
     return requireJsFile(filePath, { debug });
-  } else if (filePath.startsWith('.env')) {
+  } else if (fileName.startsWith('.env')) {
     return parseDotEnvFile(filePath, { debug });
   } else {
-    throw new Error('file type not supported');
+    throw new Error(`file type not supported: path(${filePath})`);
   }
 }
 
@@ -122,11 +126,32 @@ function getAllConfigFiletypes(jsonPath, { debug }) {
   return getConfigFile(jsonPath, { debug });
 }
 
+function objToVars(obj, prevKey) {
+  let vars = {};
+  for (const key in obj) {
+    const element = obj[key];
+    const varName = prevKey ? `${prevKey}_${key}` : key;
+    if (typeof element === 'object') {
+      vars[varName] = JSON.stringify(element);
+      vars = { ...vars, ...objToVars(element, varName) };
+    } else {
+      vars[varName] = element;
+    }
+  }
+  return vars;
+}
+
+function injectToProcessEnv(config) {
+  const vars = objToVars(config);
+  Object.keys(vars).forEach(k => process.env[k] = vars[k]);
+}
+
 function load({
   globalVar = global,
   fileName = DEFAULT_FILENAME,
   env = process.env.NODE_ENV,
   cwd = process.cwd(),
+  injectToProcess = true,
   debug = false
 } = {}) {
   if (globalVar && globalVar.enx) {
@@ -136,15 +161,17 @@ function load({
 
   const getFileFn = fileName === DEFAULT_FILENAME ? getAllConfigFiletypes : getConfigFile;
 
-  const generalFilePath = fileName.replace('.${env}', '');
+  const generalFilePath = path.resolve(cwd, fileName.replace('.${env}', ''));
   const vars = getFileFn(generalFilePath, { debug });
   log(debug, vars, { prefix: 'vars' });
 
-  const currentEnvFilePath = fileName.replace('${env}', env);
+  const currentEnvFilePath = path.resolve(fileName.replace('${env}', env));
   const envVars = getFileFn(currentEnvFilePath, { debug });
   log(debug, envVars, { prefix: 'envVars' });
 
   globalVar.enx = override(vars, envVars);
+
+  if (injectToProcess) injectToProcessEnv(globalVar.enx);
 
   return globalVar.enx;
 }

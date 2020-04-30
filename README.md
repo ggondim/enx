@@ -11,7 +11,7 @@ It is like dotenv and dot-env, but with the best of both and more features.
 - [ ] Front-end support with webpack
 - [X] `.env` portability
 - [X] Execution of JS modules
-- [ ] `process.env` variable injection
+- [X] `process.env` variable injection
 
 *Not checked features are in roadmap.
 
@@ -96,6 +96,42 @@ module.exports = {
 Make sure you don't have any `.env` files alongside `.env.js` files, because `.env` files [takes precedence](#Enx-file-types-precedence) over JS files.
 
 JS files also will override `.env.json` files because they [take precedence](#Enx-file-types-precedence).
+
+### ⭐ `process.env` variable injection
+
+By default, enx config object will be injected to `process.env` as key-value pairs.
+
+Complex values are avaiable both as JSON strings and as path variables, for example, this config:
+
+```json
+{
+  "config": true,
+  "another": {
+    "config": "yes",
+    "array": ["1"]
+  }
+}
+```
+
+...produces a `process.env`:
+
+```javascript
+{
+  config: 'true',
+  another: '{"config":"yes","array":["1"]}',
+  another_config: 'yes',
+  another_array: '["1"]',
+  another_array_0: '1'
+}
+```
+
+So, in the end **you can access a config key `another.config` using both `enx.another.config` or `process.env.another_config`**.
+
+---
+
+> ℹ Runtime injected `process.env` variables is avaiable just in the script execution scope. This means that other running Node.js processes cannot access the same variables and, if you kill the process with injected variables, they will not be avaiable next execution. Also, enx config object is injected to `process.env` as key-value pairs because `process.env` just support key-value pairs.
+
+> ℹ Enx config object is also injected to `globalVar.enx` as an object.
 
 ## Overriding load options
 
