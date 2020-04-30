@@ -80,6 +80,8 @@ You can use your existent `.env` files with enx.
 
 You just need them in your package folder, because that file type [takes precedence](#Enx-file-types-precedence) over `.env.json` files.
 
+Also, **you don't need to replace `process.env` callings by enx** if you don't want to, because enx config object will be [injected normally in `process.env` variable](#-processenv-variable-injection).
+
 ### ⭐ Execution of JS modules
 
 In a scenario you need computed config values, you can use a CommonJS module as your enx file, exporting the module as your config object.
