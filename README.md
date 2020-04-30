@@ -16,6 +16,12 @@ It is like dotenv and dot-env, but with the best of both and more features.
 
 *Not checked features are in roadmap.
 
+## You can start a progressive migration from dot-env right now using enx!
+
+Just change your `require('dotenv').config()` to `require('@enx/env')()` and start later to add some powerful enx features!
+
+For more details, refer to the [`.env` portability section](#-env-portability).
+
 ## Basic Usage
 
 First of all, define your variables file in `.env.json` or any [supported file type](#enx-file-types-precedence):
@@ -84,6 +90,8 @@ If there is both a `.env.json` file and a `.env.ENVIRONMENT.json` file, enx will
 You can use your existent `.env` files with enx.
 
 You just need them in your package folder, because that file type [takes precedence](#Enx-file-types-precedence) over `.env.json` files.
+
+Also, **you don't need to replace `process.env` callings by enx** if you don't want to, because enx config object will be [injected normally in `process.env` variable](#-processenv-variable-injection).
 
 ### ⭐ Execution of JS modules
 
