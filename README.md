@@ -15,6 +15,12 @@ It is like dotenv and dot-env, but with the best of both and more features.
 
 *Not checked features are in roadmap.
 
+## You can start a progressive migration from dot-env right now using enx!
+
+Just change your `require('dotenv').config()` to `require('@enx/env')()` and start later to add some powerful enx features!
+
+For more details, refer to the [`.env` portability section](#-env-portability).
+
 ## Basic Usage
 
 ### 1. Install it via package manager
