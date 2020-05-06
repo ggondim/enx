@@ -5,14 +5,14 @@ const DEFAULT_FILENAME = '.env.${env}.json';
 
 module.exports = load;
 
-function log(debug, message, { prefix } = {}) {
+function log(debug, message, { prefix, logger } = {}) {
   if (debug) {
     if (typeof message === "object") message = JSON.stringify(message);
-    console.log(`${prefix}: ${message}`);
+    logger(`${prefix}: ${message}`);
   }
 }
 
-function requireJsFile(filePath, { debug }) {
+function requireJsFile(filePath, { debug, logger }) {
   const absolute = path.resolve(filePath);
   let required = {};
   try {
@@ -22,30 +22,30 @@ function requireJsFile(filePath, { debug }) {
       throw new Error(`required file does not exports an object (returned: ${type})`);
     }
   } catch (error) {
-    log(debug, error, { prefix: `error in requireJsFile(${filePath})` });
+    log(debug, error, { prefix: `error in requireJsFile(${filePath})`, logger });
   }
   return required;
 }
 
-function parseJsonFile(filePath, { debug }) {
+function parseJsonFile(filePath, { debug, logger }) {
   let parsed = {};
   try {
     const file = fs.readFileSync(filePath);
     parsed = JSON.parse(file);
   } catch (e) {
-    log(debug, e, { prefix: `error in parseJsonFile(${filePath})` });
+    log(debug, e, { prefix: `error in parseJsonFile(${filePath})`, logger });
   }
   return parsed;
 }
 
 // adapted from https://github.com/motdotla/dotenv/blob/master/lib/main.js
-function parseDotEnvFile(filePath, { debug }) {
+function parseDotEnvFile(filePath, { debug, logger }) {
   const obj = {};
   let src = '';
   try {
     src = fs.readFileSync(filePath);
   } catch (e) {
-    log(debug, e, { prefix: `error in parseDotEnvFile(${filePath})` });
+    log(debug, e, { prefix: `error in parseDotEnvFile(${filePath})`, logger });
     return obj;
   }
 
@@ -82,24 +82,24 @@ function parseDotEnvFile(filePath, { debug }) {
 
       obj[key] = val
     } else if (debug) {
-      log(debug, `did not match key and value when parsing line ${idx + 1}: ${line}`, `parseDotEnvFile`);
+      log(debug, `did not match key and value when parsing line ${idx + 1}: ${line}`, { prefix: `parseDotEnvFile`, logger });
     }
   });
 
   return obj
 }
 
-function getConfigFile(filePath, {debug}) {
+function getConfigFile(filePath, {debug, logger}) {
   const slash = filePath.indexOf('/') !== -1 ? '/' : '\\';
   const slashSplit = filePath.split(slash);
   const fileName = slashSplit[slashSplit.length - 1];
 
   if (filePath.endsWith('.json')) {
-    return parseJsonFile(filePath, { debug });
+    return parseJsonFile(filePath, { debug, logger });
   } else if (filePath.endsWith('.js')) {
-    return requireJsFile(filePath, { debug });
+    return requireJsFile(filePath, { debug, logger });
   } else if (fileName.startsWith('.env')) {
-    return parseDotEnvFile(filePath, { debug });
+    return parseDotEnvFile(filePath, { debug, logger });
   } else {
     throw new Error(`file type not supported: path(${filePath})`);
   }
@@ -114,16 +114,16 @@ function override(source, target) {
   return source;
 }
 
-function getAllConfigFiletypes(jsonPath, { debug }) {
+function getAllConfigFiletypes(jsonPath, { debug, logger }) {
   const envPath = jsonPath.replace('.json', '');
   const jsPath = jsonPath.replace('.json', '.js');
 
   if (fs.existsSync(envPath)) {
-    return getConfigFile(envPath, { debug });
+    return getConfigFile(envPath, { debug, logger });
   } else if (fs.existsSync(jsPath)) {
-    return getConfigFile(jsPath, { debug });
+    return getConfigFile(jsPath, { debug, logger });
   }
-  return getConfigFile(jsonPath, { debug });
+  return getConfigFile(jsonPath, { debug, logger });
 }
 
 function objToVars(obj, prevKey) {
@@ -152,22 +152,23 @@ function load({
   env = process.env.NODE_ENV,
   cwd = process.cwd(),
   injectToProcess = true,
-  debug = false
+  debug = false,
+  logger = console.log
 } = {}) {
   if (globalVar && globalVar.enx) {
-    log(debug, 'enx already loaded');
+    log(debug, 'enx already loaded', { logger });
     return globalVar.enx;
   }
 
   const getFileFn = fileName === DEFAULT_FILENAME ? getAllConfigFiletypes : getConfigFile;
 
   const generalFilePath = path.resolve(cwd, fileName.replace('.${env}', ''));
-  const vars = getFileFn(generalFilePath, { debug });
-  log(debug, vars, { prefix: 'vars' });
+  const vars = getFileFn(generalFilePath, { debug, logger });
+  log(debug, vars, { prefix: 'vars', logger });
 
   const currentEnvFilePath = path.resolve(fileName.replace('${env}', env));
-  const envVars = getFileFn(currentEnvFilePath, { debug });
-  log(debug, envVars, { prefix: 'envVars' });
+  const envVars = getFileFn(currentEnvFilePath, { debug, logger });
+  log(debug, envVars, { prefix: 'envVars', logger });
 
   globalVar.enx = override(vars, envVars);
 
