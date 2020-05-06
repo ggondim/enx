@@ -1,5 +1,6 @@
 const fs = require('fs');
 const path = require('path');
+const dotify = require('dot-object');
 
 const DEFAULT_FILENAME = '.env.${env}.json';
 
@@ -105,13 +106,10 @@ function getConfigFile(filePath, {debug, logger}) {
   }
 }
 
-function override(source, target) {
-  for (const key in target) {
-    if (target.hasOwnProperty(key)) {
-      source[key] = target[key];
-    }
-  }
-  return source;
+function mergeObject(source, target) {
+  const dotSource = dotify.dot(source);
+  const dotTarget = dotify.dot(target);
+  return dotify.object({...dotSource, ...dotTarget});
 }
 
 function getAllConfigFiletypes(jsonPath, { debug, logger }) {
@@ -170,7 +168,7 @@ function load({
   const envVars = getFileFn(currentEnvFilePath, { debug, logger });
   log(debug, envVars, { prefix: 'envVars', logger });
 
-  globalVar.enx = override(vars, envVars);
+  globalVar.enx = mergeObject(vars, envVars);
 
   if (injectToProcess) injectToProcessEnv(globalVar.enx);
 

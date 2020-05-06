@@ -22,5 +22,8 @@
   "bugs": {
     "url": "https://github.com/NOALVO/enx/issues"
   },
-  "homepage": "https://github.com/NOALVO/enx#readme"
+  "homepage": "https://github.com/NOALVO/enx#readme",
+  "dependencies": {
+    "dot-object": "^2.1.3"
+  }
 }
