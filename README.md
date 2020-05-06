@@ -50,6 +50,8 @@ Then fetch variables from enx inside any Vue or JS file as a global variable:
 const myvalue = enx.value;
 ```
 
+See other considerations for Vue in [enx Vue CLI plugin README](https://github.com/NOALVO/enx-vue-cli-plugin/blob/master/README.md).
+
 ### In back-end ⚙
 
 Install it via package manager
