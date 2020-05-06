@@ -156,7 +156,7 @@ function load({
 } = {}) {
   if (globalVar && globalVar.enx) {
     log(debug, 'enx already loaded');
-    return globalVar.global;
+    return globalVar.enx;
   }
 
   const getFileFn = fileName === DEFAULT_FILENAME ? getAllConfigFiletypes : getConfigFile;
