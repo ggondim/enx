@@ -11,6 +11,7 @@ It is like dotenv and dot-env, but with the best of both and more features.
 - [X] `.env` portability
 - [X] Execution of JS modules
 - [X] `process.env` variable injection
+- [X] `process.env` destructuring to config object
 - [X] Vue.js support with [enx-vue-cli-plugin](https://github.com/NOALVO/enx-vue-cli-plugin)
 - [ ] Webpack plugin
 
@@ -162,6 +163,37 @@ So, in the end **you can access a config key `another.config` using both `enx.an
 
 > ℹ Enx config object is also injected to `globalVar.enx` as an object.
 
+### ⭐ `process.env` destructuring to config object
+
+By default, enx will destructure the `process.env` variable by transforming key-value pairs to objects.
+
+For example, these two `process.env` variables:
+
+```
+AUTH_URL="http://url.com"
+AUTH_KEY="secretkey"
+```
+
+...will be transformed to:
+
+```javascript
+{
+  AUTH: {
+    URL: 'http://url.com',
+    KEY: 'secrectkey'
+  }
+}
+```
+
+...and will be avaiable through enx as:
+
+```javascript
+enx.AUTH.URL // → 'http://url.com'
+enx.AUTH.KEY // → 'secrectkey'
+```
+
+> 🌝 It means, ironically, that `process.ENV.NODE_ENV` will be avaiable as `enx.NODE.ENV`
+
 ## Overriding load options
 
 You can override enx default options passing an object with the options you want to customize:
@@ -178,7 +210,10 @@ These are the default enx options:
   fileName = '.env.${env}.json',
   env = process.env.NODE_ENV,
   cwd = process.cwd(),
-  debug = false
+  injectToProcess = true,
+  injectProcessEnvToEnx = true,
+  debug = false,
+  logger = console.log
 }
 ```
 
@@ -199,6 +234,18 @@ Folder containing the variables file. Defaults to `process.cwd()` (project root)
 
 Example for a relative './config' folder: `enx({ cwd: './config' })`.
 
+#### `injectToProcess` _boolean_
+
+Whether if enx config object should be injected do global `process.env` variable. Defaults to `true`.
+
+#### `injectProcessEnvToEnx` _boolean_
+
+Whether if original `process.env` should be destructured and injected to enx config object. Defaults to `true`.
+
 #### `debug` _boolean_
 
-Flag to activate error and debug messages to the console.
+Flag to activate error and debug messages to a logger method.
+
+#### `logger` _function_
+
+Logger method to be used by logging messages if `debug` option is enabled. Defaults to `console.log`.

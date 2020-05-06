@@ -144,12 +144,23 @@ function injectToProcessEnv(config) {
   Object.keys(vars).forEach(k => process.env[k] = vars[k]);
 }
 
+function destructProcessEnv() {
+  const dotUnderscore = new dotify('_');
+  let result = {};
+  for (const key in process.env) {
+    const value = process.env[key];
+    dotUnderscore.set(key, value, result);
+  }
+  return result;
+}
+
 function load({
   globalVar = global,
   fileName = DEFAULT_FILENAME,
   env = process.env.NODE_ENV,
   cwd = process.cwd(),
   injectToProcess = true,
+  injectProcessEnvToEnx = true,
   debug = false,
   logger = console.log
 } = {}) {
@@ -168,9 +179,14 @@ function load({
   const envVars = getFileFn(currentEnvFilePath, { debug, logger });
   log(debug, envVars, { prefix: 'envVars', logger });
 
-  globalVar.enx = mergeObject(vars, envVars);
+  let enx = mergeObject(vars, envVars);
 
-  if (injectToProcess) injectToProcessEnv(globalVar.enx);
+  const processDestructed = injectProcessEnvToEnx ? destructProcessEnv() : {};
+
+  if (injectToProcess) injectToProcessEnv(enx);
+
+  enx = { ...enx, ...processDestructed };
+  globalVar.enx = enx;
 
   return globalVar.enx;
 }
