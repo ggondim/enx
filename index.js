@@ -175,7 +175,7 @@ function load({
   const vars = getFileFn(generalFilePath, { debug, logger });
   log(debug, vars, { prefix: 'vars', logger });
 
-  const currentEnvFilePath = path.resolve(fileName.replace('${env}', env));
+  const currentEnvFilePath = path.resolve(cwd, fileName.replace('${env}', env));
   const envVars = getFileFn(currentEnvFilePath, { debug, logger });
   log(debug, envVars, { prefix: 'envVars', logger });
 
